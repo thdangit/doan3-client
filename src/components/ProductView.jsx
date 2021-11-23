@@ -148,20 +148,7 @@ const ProductView = (props) => {
             {numberWithCommas(product.price)}
           </span>
         </div>
-        {/* <div className="product__info__item">
-                    <div className="product__info__item__title">
-                        Màu sắc
-                    </div>
-                    <div className="product__info__item__list">
-                        {
-                            product.colors.map((item, index) => (
-                                <div key={index} className={`product__info__item__list__item ${color === item ? 'active' : ''}`} onClick={() => setColor(item)}>
-                                    <div className={`circle bg-${item}`}></div>
-                                </div>
-                            ))
-                        }
-                    </div>
-                </div> */}
+
         <div className="product__info__item">
           <div className="product__info__item__title">Size</div>
           <div className="product__info__item__list">

@@ -8,7 +8,7 @@ const category = [
     categorySlug: "coffee2",
   },
   {
-    display: "Đặc việt",
+    display: "Đặc biệt",
     categorySlug: "coffee3",
   },
 ];

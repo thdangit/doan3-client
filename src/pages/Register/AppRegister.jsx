@@ -87,6 +87,16 @@ const Register = () => {
     console.log(inputs);
   };
 
+  // const [username, setUsername] = useState("");
+  // const [email, setEmail] = useState("");
+  // const [numberPhone, setNumberPhone] = useState("");
+  // const [birthday, setBirthday] = useState("");
+  // const [password, setPassword] = useState("");
+  // const [cfPassword, setCfPassword] = useState("");
+
+  // const [errorMessage, setErrorMessage] = useState("");
+  // const [successMessage, setSuccessMessage] = useState("");
+
   return (
     <div className="app-register">
       <form onSubmit={handleSubmit}>
@@ -99,6 +109,9 @@ const Register = () => {
             onChange={onChange}
           />
         ))}
+        {/* <FormInput
+        
+        ></FormInput> */}
         <button className="btnLogin" onClick={clickSubmit}>
           Đăng ký
         </button>

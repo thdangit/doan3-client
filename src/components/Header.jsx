@@ -84,11 +84,11 @@ const Header = () => {
             </div>
             <div className="header__menu__item header__menu__right__item">
               <Link to="/cart">
-                <i className="bx bx-shopping-bag"></i>
+                <i className="bx bx-cart-alt"></i>
               </Link>
             </div>
             <div className="header__menu__item header__menu__right__item">
-              <Link to="/login">
+              <Link to="/LoginData">
                 <i className="bx bx-user"></i>
               </Link>
             </div>

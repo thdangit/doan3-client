@@ -1,5 +1,6 @@
 import React from "react";
 import { Link } from "react-router-dom";
+import { useState, useEffect } from "react";
 
 import Helmet from "../components/Helmet";
 import HeroSlider from "../components/HeroSlider";
@@ -13,8 +14,32 @@ import policy from "../assets/fake-data/policy";
 import productData from "../assets/fake-data/products";
 
 import banner from "../assets/images/banner.jpg";
+import { ProductsData } from "./ProductsData";
 
+import { fs } from "../firebaseConfig";
 const Home = () => {
+  const [products, setProducts] = useState([]);
+
+  // getting products function
+  const getProducts = async () => {
+    const products = await fs.collection("products").get();
+    const productsArray = [];
+    for (var snap of products.docs) {
+      var data = snap.data();
+      data.ID = snap.id;
+      productsArray.push({
+        ...data,
+      });
+      if (productsArray.length === products.docs.length) {
+        setProducts(productsArray);
+      }
+    }
+  };
+
+  useEffect(() => {
+    getProducts();
+  }, []);
+
   return (
     <Helmet title="Trang chủ">
       {/* hero slider */}
@@ -49,7 +74,7 @@ const Home = () => {
         <SectionTitle>top sản phẩm bán chạy trong tuần</SectionTitle>
         <SectionBody>
           <Grid col={4} mdCol={2} smCol={1} gap={20}>
-            {productData.getProducts(4).map((item, index) => (
+            {/* {productData.getProducts(4).map((item, index) => (
               <ProductCard
                 key={index}
                 img01={item.image01}
@@ -58,7 +83,9 @@ const Home = () => {
                 price={Number(item.price)}
                 slug={item.slug}
               />
-            ))}
+            ))} */}
+
+            <ProductsData products={products} />
           </Grid>
         </SectionBody>
       </Section>
@@ -69,7 +96,7 @@ const Home = () => {
         <SectionTitle>sản phẩm mới</SectionTitle>
         <SectionBody>
           <Grid col={4} mdCol={2} smCol={1} gap={20}>
-            {productData.getProducts(8).map((item, index) => (
+            {/* {productData.getProducts(8).map((item, index) => (
               <ProductCard
                 key={index}
                 img01={item.image01}
@@ -78,7 +105,9 @@ const Home = () => {
                 price={Number(item.price)}
                 slug={item.slug}
               />
-            ))}
+            ))} */}
+
+            <ProductsData products={products} />
           </Grid>
         </SectionBody>
       </Section>
@@ -109,6 +138,8 @@ const Home = () => {
                 slug={item.slug}
               />
             ))}
+
+            {/* <ProductsData products={products} /> */}
           </Grid>
         </SectionBody>
       </Section>
