@@ -6,7 +6,7 @@ import CheckBox from "../components/CheckBox";
 import productData from "../assets/fake-data/products";
 import category from "../assets/fake-data/category";
 // import colors from "../assets/fake-data/product-color";
-import size from "../assets/fake-data/product-size";
+// import size from "../assets/fake-data/product-size";
 import Button from "../components/Button";
 import InfinityList from "../components/InfinityList";
 
@@ -146,7 +146,7 @@ const Catalog = () => {
                         </div>
                     </div> */}
 
-          <div className="catalog__filter__widget">
+          {/* <div className="catalog__filter__widget">
             <div className="catalog__filter__widget__title">Size</div>
             <div className="catalog__filter__widget__content">
               {size.map((item, index) => (
@@ -164,7 +164,7 @@ const Catalog = () => {
                 </div>
               ))}
             </div>
-          </div>
+          </div> */}
 
           <div className="catalog__filter__widget">
             <div className="catalog__filter__widget__content">

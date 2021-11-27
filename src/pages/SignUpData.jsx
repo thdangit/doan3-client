@@ -38,8 +38,8 @@ const SignUpData = () => {
             setErrorMsg("");
             setTimeout(() => {
               setSuccessMsg("");
-              history.push("/LoginData");
-            }, 3000);
+              history.push("/cart");
+            }, 1000);
           })
           .catch((error) => setErrorMsg(error.message));
       })

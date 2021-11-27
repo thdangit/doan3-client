@@ -1,5 +1,5 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useHistory } from "react-router-dom";
 import { useState, useEffect } from "react";
 
 import Helmet from "../components/Helmet";
@@ -16,9 +16,11 @@ import productData from "../assets/fake-data/products";
 import banner from "../assets/images/banner.jpg";
 import { ProductsData } from "./ProductsData";
 
-import { fs } from "../firebaseConfig";
+import { fs, auth } from "../firebaseConfig";
 const Home = () => {
   const [products, setProducts] = useState([]);
+
+  const history = useHistory();
 
   // getting products function
   const getProducts = async () => {
@@ -39,6 +41,77 @@ const Home = () => {
   useEffect(() => {
     getProducts();
   }, []);
+
+  // gettin current user uid
+  function GetUserUid() {
+    const [uid, setUid] = useState(null);
+    useEffect(() => {
+      auth.onAuthStateChanged((user) => {
+        if (user) {
+          setUid(user.uid);
+        }
+      });
+    }, []);
+    return uid;
+  }
+
+  const uid = GetUserUid();
+
+  // get username
+  function GetCurrentUser() {
+    const [user, setUser] = useState(null);
+    useEffect(() => {
+      auth.onAuthStateChanged((user) => {
+        if (user) {
+          fs.collection("users")
+            .doc(user.uid)
+            .get()
+            .then((snapshot) => {
+              setUser(snapshot.data().FullName);
+            });
+        } else {
+          setUser(null);
+        }
+      });
+    }, []);
+    return user;
+  }
+
+  const username = GetCurrentUser();
+
+  let Product;
+  const addToCart = (product) => {
+    // Product = product;
+    // Product["qty"] = 1;
+    // Product["TotalProductPrice"] = Product.qty * Product.price;
+    // fs.collection("Cart add " + uid)
+    //   .doc(product.ID)
+    //   .set(Product)
+    //   .then(() => {
+    //     console.log("successfully added to cart");
+    //   });
+    // console.log(product, uid);
+    // if (uid !== null) {
+    //   console.log(product);
+    // } else {
+    //   props.history.push("/Login");
+    // }
+
+    if (uid !== null) {
+      // console.log(product);
+      Product = product;
+      Product["qty"] = 1;
+      Product["TotalProductPrice"] = Product.qty * Product.price;
+      fs.collection("Cart of " + username + " " + uid)
+        .doc(product.ID)
+        .set(Product)
+        .then(() => {
+          alert("successfully added to cart");
+        });
+    } else {
+      history.push("/LoginData");
+    }
+  };
 
   return (
     <Helmet title="Trang chủ">
@@ -85,7 +158,7 @@ const Home = () => {
               />
             ))} */}
 
-            <ProductsData products={products} />
+            <ProductsData products={products} addToCart={addToCart} />
           </Grid>
         </SectionBody>
       </Section>
@@ -107,7 +180,7 @@ const Home = () => {
               />
             ))} */}
 
-            <ProductsData products={products} />
+            <ProductsData products={products} addToCart={addToCart} />
           </Grid>
         </SectionBody>
       </Section>

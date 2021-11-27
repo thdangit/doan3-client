@@ -28,8 +28,8 @@ const LoginData = () => {
         setErrorMsg("");
         setTimeout(() => {
           setSuccessMsg("");
-          history.push("/");
-        }, 3000);
+          history.push("/catalog");
+        }, 1200);
       })
       .catch((error) => setErrorMsg(error.message));
   };
@@ -39,6 +39,7 @@ const LoginData = () => {
       {successMsg && (
         <>
           <div className="success-msg">{successMsg}</div>
+          {/* {alert(successMsg)} */}
           <br></br>
         </>
       )}

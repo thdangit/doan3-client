@@ -29,7 +29,7 @@ export const IndividualProduct = ({ individualProduct, addToCart }) => {
           animate={true}
           onClick={handleAddToCart}
         >
-          chọn mua
+          Thêm
         </Button>
       </div>
     </div>

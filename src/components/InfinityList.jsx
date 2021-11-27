@@ -3,10 +3,13 @@ import PropTypes from "prop-types";
 import { auth, fs } from "../firebaseConfig";
 // import Grid from './Grid'
 // import ProductCard from './ProductCard'
+import { useHistory } from "react-router-dom";
 
 import { ProductsData } from "../pages/ProductsData";
 
 const InfinityList = (props) => {
+  const history = useHistory();
+
   const perLoad = 6; // items each load
 
   const listRef = useRef(null);
@@ -112,6 +115,29 @@ const InfinityList = (props) => {
 
   const uid = GetUserUid();
 
+  // get username
+  function GetCurrentUser() {
+    const [user, setUser] = useState(null);
+    useEffect(() => {
+      auth.onAuthStateChanged((user) => {
+        if (user) {
+          fs.collection("users")
+            .doc(user.uid)
+            .get()
+            .then((snapshot) => {
+              setUser(snapshot.data().FullName);
+            });
+        } else {
+          setUser(null);
+        }
+      });
+    }, []);
+    return user;
+  }
+
+  const username = GetCurrentUser();
+  console.log(username);
+
   useEffect(() => {
     getProducts();
   }, []);
@@ -119,21 +145,35 @@ const InfinityList = (props) => {
   let Product;
 
   const addToCart = (product) => {
-    Product = product;
-    Product["qty"] = 1;
-    Product["TotalProductPrice"] = Product.qty * Product.price;
-    fs.collection("Cart add " + uid)
-      .doc(product.ID)
-      .set(Product)
-      .then(() => {
-        console.log("successfully added to cart");
-      });
-    console.log(product);
+    // Product = product;
+    // Product["qty"] = 1;
+    // Product["TotalProductPrice"] = Product.qty * Product.price;
+    // fs.collection("Cart add " + uid)
+    //   .doc(product.ID)
+    //   .set(Product)
+    //   .then(() => {
+    //     console.log("successfully added to cart");
+    //   });
+    // console.log(product, uid);
     // if (uid !== null) {
     //   console.log(product);
     // } else {
-    //   // props.history.push("/Login");
+    //   props.history.push("/Login");
     // }
+    if (uid !== null) {
+      // console.log(product);
+      Product = product;
+      Product["qty"] = 1;
+      Product["TotalProductPrice"] = Product.qty * Product.price;
+      fs.collection("Cart of " + username + " " + uid)
+        .doc(product.ID)
+        .set(Product)
+        .then(() => {
+          alert("successfully added to cart");
+        });
+    } else {
+      history.push("/LoginData");
+    }
   };
 
   return (

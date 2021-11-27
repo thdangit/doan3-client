@@ -1,7 +1,13 @@
-import React, { useRef, useEffect } from "react";
+import React, { useRef, useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 
 import logo from "../assets/images/Logo-2.png";
+
+import { auth, fs } from "../firebaseConfig";
+
+import { useHistory } from "react-router-dom";
+import "../pages/custom.css";
+// import Button from "./Button";
 
 const mainNav = [
   {
@@ -48,6 +54,37 @@ const Header = () => {
 
   const menuToggle = () => menuLeft.current.classList.toggle("active");
 
+  // getting current user function
+  function GetCurrentUser() {
+    const [user, setUser] = useState(null);
+    useEffect(() => {
+      auth.onAuthStateChanged((user) => {
+        if (user) {
+          fs.collection("users")
+            .doc(user.uid)
+            .get()
+            .then((snapshot) => {
+              setUser(snapshot.data().FullName);
+            });
+        } else {
+          setUser(null);
+        }
+      });
+    }, []);
+    return user;
+  }
+
+  const user = GetCurrentUser();
+  console.log(user);
+
+  const history = useHistory();
+
+  const handleLogout = () => {
+    auth.signOut().then(() => {
+      history.push("/LoginData");
+    });
+  };
+
   return (
     <div className="header" ref={headerRef}>
       <div className="container">
@@ -79,19 +116,63 @@ const Header = () => {
             ))}
           </div>
           <div className="header__menu__right">
-            <div className="header__menu__item header__menu__right__item">
-              <i className="bx bx-search"></i>
-            </div>
-            <div className="header__menu__item header__menu__right__item">
-              <Link to="/cart">
-                <i className="bx bx-cart-alt"></i>
-              </Link>
-            </div>
-            <div className="header__menu__item header__menu__right__item">
-              <Link to="/LoginData">
-                <i className="bx bx-user"></i>
-              </Link>
-            </div>
+            {!user && (
+              <>
+                {/* <div>
+                <Link className="navlink" to="signup">
+                  SIGN UP
+                </Link>
+              </div>
+              <div>
+                <Link className="navlink" to="login">
+                  LOGIN
+                </Link>
+              </div> */}
+                <div className="header__menu__right" user={user}>
+                  <div className="header__menu__item header__menu__right__item">
+                    <i className="bx bx-search"></i>
+                  </div>
+                  <div className="header__menu__item header__menu__right__item">
+                    <Link to="/LoginData">
+                      <i className="bx bx-cart-alt"></i>
+                    </Link>
+                  </div>
+                  <div className="header__menu__item header__menu__right__item">
+                    <Link to="/LoginData">
+                      <i className="bx bx-user"></i>
+                    </Link>
+                  </div>
+                </div>
+              </>
+            )}
+            {user && (
+              <>
+                {/* <div className="cart-menu-btn">
+                <span className='cart-indicator'>{totalQty}</span>
+              </div> */}
+                <div className="header__menu__item header__menu__right__item cartCustom">
+                  <Link to="/cart">
+                    <i className="bx bx-cart-alt"></i>
+                  </Link>
+                </div>
+
+                <div className="header__menu__item header__menu__right__item">
+                  <Link className="navLink" to="/">
+                    <i className="bx bx-user"></i>
+                    <p className="username">{user}</p>
+                  </Link>
+                </div>
+
+                <div className="header__menu__item header__menu__right__item">
+                  <div className="btn btn-danger btn-md" onClick={handleLogout}>
+                    LOGOUT
+                  </div>
+                </div>
+                {/* <Button className="custom" onClick={handleLogout}>
+                LOGOUT
+              </Button> */}
+              </>
+            )}
           </div>
         </div>
       </div>
