@@ -144,29 +144,14 @@ const InfinityList = (props) => {
 
   let Product;
 
-  const addToCart = (product) => {
-    // Product = product;
-    // Product["qty"] = 1;
-    // Product["TotalProductPrice"] = Product.qty * Product.price;
-    // fs.collection("Cart add " + uid)
-    //   .doc(product.ID)
-    //   .set(Product)
-    //   .then(() => {
-    //     console.log("successfully added to cart");
-    //   });
-    // console.log(product, uid);
-    // if (uid !== null) {
-    //   console.log(product);
-    // } else {
-    //   props.history.push("/Login");
-    // }
+  const addToCart = (products) => {
     if (uid !== null) {
       // console.log(product);
-      Product = product;
+      Product = products;
       Product["qty"] = 1;
-      Product["TotalProductPrice"] = Product.qty * Product.price;
+      Product["TotalProductPrice"] = Product.qty * Product.gia;
       fs.collection("Cart of " + username + " " + uid)
-        .doc(product.ID)
+        .doc(products.ID)
         .set(Product)
         .then(() => {
           alert("successfully added to cart");
