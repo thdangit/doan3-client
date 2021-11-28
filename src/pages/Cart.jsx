@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 import Helmet from "../components/Helmet";
@@ -8,39 +8,20 @@ import Helmet from "../components/Helmet";
 import Button from "../components/Button";
 
 // import productData from "../assets/fake-data/products";
-import numberWithCommas from "../utils/numberWithCommas";
+// import numberWithCommas from "../utils/numberWithCommas";
 import { auth, fs } from "../firebaseConfig";
 // import Grid from './Grid'
 // import ProductCard from './ProductCard'
 // import { useHistory } from "react-router-dom";
 import CartProducts from "./CartProducts";
 
+import Modal from "../components/Modal";
+// import { toast } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
+
 import "../pages/custom.css";
 
 const Cart = () => {
-  const cartItems = useSelector((state) => state.cartItems.value);
-
-  //   const [cartProducts, setCartProducts] = useState(
-  //     productData.getCartItemsInfo(cartItems)
-  //   );
-
-  const [totalProducts, setTotalProducts] = useState(0);
-
-  const [totalPrice, setTotalPrice] = useState(0);
-
-  useEffect(() => {
-    // setCartProducts(productData.getCartItemsInfo(cartItems));
-    setTotalPrice(
-      cartItems.reduce(
-        (total, item) => total + Number(item.quantity) * Number(item.price),
-        0
-      )
-    );
-    setTotalProducts(
-      cartItems.reduce((total, item) => total + Number(item.quantity), 0)
-    );
-  }, [cartItems]);
-
   // gettin current user uid
   function GetUserUid() {
     const [uid, setUid] = useState(null);
@@ -76,14 +57,14 @@ const Cart = () => {
     return user;
   }
   const username = GetCurrentUser();
-  //   console.log(username);
+  // console.log(username);
 
   const [cartProducts, setCartProducts] = useState([]);
 
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       if (user) {
-        fs.collection("Cart of " + username + " " + uid).onSnapshot(
+        fs.collection("Cart of " + username + " " + user.uid).onSnapshot(
           (snapshot) => {
             const newCartProduct = snapshot.docs.map((doc) => ({
               ID: doc.id,
@@ -92,13 +73,40 @@ const Cart = () => {
             setCartProducts(newCartProduct);
           }
         );
+        // console.log(cartProducts);
       } else {
         console.log("user is not signed in to retrieve cart");
       }
     });
-  });
+  }, [username]);
 
   // console.log(cartProducts);
+
+  // getting the qty from cartProducts in a seperate array
+  const qty = cartProducts.map((cartProduct) => {
+    return cartProduct.qty;
+  });
+
+  // console.log(qty);
+
+  // reducing the qty in a single value
+  const reducerOfQty = (accumulator, currentValue) =>
+    accumulator + currentValue;
+
+  const totalQty = qty.reduce(reducerOfQty, 0);
+
+  // console.log(totalQty);
+
+  // getting the TotalProductPrice from cartProducts in a seperate array
+  const price = cartProducts.map((cartProduct) => {
+    return cartProduct.TotalProductPrice;
+  });
+
+  // reducing the price in a single value
+  const reducerOfPrice = (accumulator, currentValue) =>
+    accumulator + currentValue;
+
+  const totalPrice = price.reduce(reducerOfPrice, 0);
 
   // global variable
   let Product;
@@ -146,31 +154,35 @@ const Cart = () => {
     }
   };
 
+  const [showModal, setShowModal] = useState(false);
+
+  const triggerModal = () => {
+    setShowModal(true);
+  };
+  const hideModal = () => {
+    setShowModal(false);
+  };
+
   return (
     <Helmet title="Giỏ hàng">
       <div className="cart">
         <div className="cart__info">
           <div className="cart__info__txt">
-            <p>Bạn đang có {totalProducts} sản phẩm trong giỏ hàng</p>
+            <p>Bạn đang có tổng _{totalQty} _ sản phẩm trong giỏ hàng</p>
             <div className="cart__info__txt__price">
-              <span>Thành tiền:</span>{" "}
-              <span>{numberWithCommas(Number(totalPrice))}</span>
+              <span>Thành tiền:</span> <span>{totalPrice} VNĐ</span>
             </div>
           </div>
           <div className="cart__info__btn">
-            <Button size="block">Đặt hàng</Button>
+            <Button size="block" onClick={() => triggerModal()}>
+              THANH TOÁN
+            </Button>
             <Link to="/catalog">
               <Button size="block">Tiếp tục mua hàng</Button>
             </Link>
           </div>
         </div>
         <div className="cart__list">
-          {/* {
-                        cartProducts.map((item, index) => (
-                            <CartItem item={item} key={index}/>
-                        ))
-                    } */}
-
           {cartProducts.length > 0 && (
             <div className="container-fluid">
               <div className="products-cart">
@@ -184,6 +196,14 @@ const Cart = () => {
           )}
           {cartProducts.length < 1 && (
             <div className="container-fluid">No products to show</div>
+          )}
+
+          {showModal === true && (
+            <Modal
+              TotalPrice={totalPrice}
+              totalQty={totalQty}
+              hideModal={hideModal}
+            />
           )}
         </div>
       </div>

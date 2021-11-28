@@ -6,6 +6,7 @@ import { auth, fs } from "../firebaseConfig";
 import { useHistory } from "react-router-dom";
 
 import { ProductsData } from "../pages/ProductsData";
+import { toast } from "react-toastify";
 
 const InfinityList = (props) => {
   const history = useHistory();
@@ -55,31 +56,6 @@ const InfinityList = (props) => {
     getItems();
     setLoad(false);
   }, [load, index, data, props.data]);
-
-  // get data
-
-  // getting current user function
-  //   function GetCurrentUser() {
-  //     const [user, setUser] = useState(null);
-  //     useEffect(() => {
-  //       auth.onAuthStateChanged((user) => {
-  //         if (user) {
-  //           fs.collection("users")
-  //             .doc(user.uid)
-  //             .get()
-  //             .then((snapshot) => {
-  //               setUser(snapshot.data().FullName);
-  //             });
-  //         } else {
-  //           setUser(null);
-  //         }
-  //       });
-  //     }, []);
-  //     return user;
-  //   }
-
-  //   const user = GetCurrentUser();
-  // console.log(user);
 
   // state of products
   const [products, setProducts] = useState([]);
@@ -136,7 +112,7 @@ const InfinityList = (props) => {
   }
 
   const username = GetCurrentUser();
-  console.log(username);
+  // console.log(username);
 
   useEffect(() => {
     getProducts();
@@ -154,7 +130,15 @@ const InfinityList = (props) => {
         .doc(products.ID)
         .set(Product)
         .then(() => {
-          alert("successfully added to cart");
+          toast.success("Thêm thành công!!!", {
+            position: "top-right",
+            autoClose: 1200,
+            hideProgressBar: false,
+            closeOnClick: true,
+            pauseOnHover: false,
+            draggable: false,
+            progress: undefined,
+          });
         });
     } else {
       history.push("/LoginData");
@@ -163,26 +147,6 @@ const InfinityList = (props) => {
 
   return (
     <div ref={listRef}>
-      {/* <Grid
-                col={3}
-                mdCol={2}
-                smCol={1}
-                gap={20}
-            >
-                {
-                    data.map((item, index) => (
-                        <ProductCard
-                            key={index}
-                            img01={item.image01}
-                            img02={item.image02}
-                            name={item.title}
-                            price={Number(item.price)}
-                            slug={item.slug}
-                        />
-                    ))
-                }
-            </Grid> */}
-
       {products.length > 0 && (
         <div className="container-fluid">
           <div className="products-box">

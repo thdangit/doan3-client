@@ -84,6 +84,43 @@ const Header = () => {
       history.push("/LoginData");
     });
   };
+  // get username
+  // function GetCurrentUser() {
+  //   const [user, setUser] = useState(null);
+  //   useEffect(() => {
+  //     auth.onAuthStateChanged((user) => {
+  //       if (user) {
+  //         fs.collection("users")
+  //           .doc(user.uid)
+  //           .get()
+  //           .then((snapshot) => {
+  //             setUser(snapshot.data().FullName);
+  //           });
+  //       } else {
+  //         setUser(null);
+  //       }
+  //     });
+  //   }, []);
+  //   return user;
+  // }
+
+  const username = GetCurrentUser();
+
+  // state of totalProducts
+  const [totalProducts, setTotalProducts] = useState(0);
+  // getting cart products
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        fs.collection("Cart of " + username + " " + user.uid).onSnapshot(
+          (snapshot) => {
+            const qty = snapshot.docs.length;
+            setTotalProducts(qty);
+          }
+        );
+      }
+    });
+  }, [username]);
 
   return (
     <div className="header" ref={headerRef}>
@@ -128,7 +165,11 @@ const Header = () => {
                   LOGIN
                 </Link>
               </div> */}
-                <div className="header__menu__right" user={user}>
+                <div
+                  className="header__menu__right"
+                  user={user}
+                  totalProducts={totalProducts}
+                >
                   <div className="header__menu__item header__menu__right__item">
                     <i className="bx bx-search"></i>
                   </div>
@@ -154,6 +195,7 @@ const Header = () => {
                   <Link to="/cart">
                     <i className="bx bx-cart-alt"></i>
                   </Link>
+                  <span className="cart-indicator">{totalProducts}</span>
                 </div>
 
                 <div className="header__menu__item header__menu__right__item">
@@ -164,9 +206,7 @@ const Header = () => {
                 </div>
 
                 <div className="header__menu__item header__menu__right__item">
-                  <div className="btn btn-danger btn-md" onClick={handleLogout}>
-                    LOGOUT
-                  </div>
+                  <i class="bx bx-log-in-circle" onClick={handleLogout}></i>
                 </div>
                 {/* <Button className="custom" onClick={handleLogout}>
                 LOGOUT

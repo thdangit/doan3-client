@@ -38,7 +38,7 @@ const SignUpData = () => {
             setErrorMsg("");
             setTimeout(() => {
               setSuccessMsg("");
-              history.push("/cart");
+              history.push("/catalog");
             }, 1000);
           })
           .catch((error) => setErrorMsg(error.message));
@@ -58,7 +58,7 @@ const SignUpData = () => {
       )}
       <form className="form-group" autoComplete="off" onSubmit={handleSignup}>
         <h1>Sign Up</h1>
-        <label>Full Name</label>
+        <label>User Name</label>
         <input
           type="text"
           className="form-control"
