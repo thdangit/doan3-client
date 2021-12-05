@@ -130,6 +130,7 @@ const InfinityList = (props) => {
         .doc(products.ID)
         .set(Product)
         .then(() => {
+          // console.log("Lỗi");
           toast.success("Thêm thành công!!!", {
             position: "top-right",
             autoClose: 1200,

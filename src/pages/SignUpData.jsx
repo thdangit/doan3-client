@@ -11,7 +11,12 @@ const SignUpData = () => {
 
   const [fullName, setFullname] = useState("");
   const [email, setEmail] = useState("");
+  const [sdt, setSdt] = useState("");
+  const [gioitinh, setGioitinh] = useState("");
+  const [yearOfBirth, setYearOfBirth] = useState("");
+  const [diachi, setDiaChi] = useState("");
   const [password, setPassword] = useState("");
+  const [chucvu] = useState("Khách hàng");
 
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
@@ -27,8 +32,13 @@ const SignUpData = () => {
           .doc(credentials.user.uid)
           .set({
             FullName: fullName,
+            sdt: sdt,
+            gioitinh: gioitinh,
+            diachi: diachi,
             Email: email,
+            yearOfBirth: yearOfBirth,
             Password: password,
+            chucvu: chucvu,
           })
           .then(() => {
             setSuccessMsg("Đăng ký thành công!");
@@ -57,8 +67,8 @@ const SignUpData = () => {
         </>
       )}
       <form className="form-group" autoComplete="off" onSubmit={handleSignup}>
-        <h1>Sign Up</h1>
-        <label>User Name</label>
+        <h1>Đăng ký</h1>
+        <label>Họ tên</label>
         <input
           type="text"
           className="form-control"
@@ -67,6 +77,53 @@ const SignUpData = () => {
           value={fullName}
         ></input>
         <br></br>
+
+        <label>SDT</label>
+        <input
+          type="phone"
+          className="form-control"
+          required
+          onChange={(e) => setSdt(e.target.value)}
+          value={sdt}
+        ></input>
+        <br></br>
+
+        <label>Giới tính</label>
+        <br />
+        <div className="item__gioitinh">
+          <label for="nam">Nam</label>
+          <input
+            type="radio"
+            name="sex"
+            id="nam"
+            value="Nam"
+            className="form-control gioitinh"
+            required
+            onChange={(e) => setGioitinh(e.target.value)}
+          ></input>
+
+          <label for="nu">Nữ</label>
+          <input
+            type="radio"
+            name="sex"
+            id="nu"
+            value="Nữ"
+            className="form-control gioitinh"
+            required
+            onChange={(e) => setGioitinh(e.target.value)}
+          ></input>
+        </div>
+        <br />
+        <label>Địa chỉ</label>
+        <input
+          type="text"
+          className="form-control"
+          required
+          onChange={(e) => setDiaChi(e.target.value)}
+          value={diachi}
+        ></input>
+        <br></br>
+
         <label>Email</label>
         <input
           type="email"
@@ -76,6 +133,27 @@ const SignUpData = () => {
           value={email}
         ></input>
         <br></br>
+
+        <label>Năm sinh</label>
+        <input
+          type="number"
+          className="form-control"
+          required
+          onChange={(e) => setYearOfBirth(e.target.value)}
+          min="1920"
+          max="2022"
+          value={yearOfBirth}
+        ></input>
+        <br></br>
+        <label>Chức vụ</label>
+        <input
+          type="text"
+          className="form-control chucvu"
+          required
+          // onChange={(e) => setChucvu(e.target.value)}
+          value={chucvu}
+        ></input>
+        <br />
         <label>Password</label>
         <input
           type="password"

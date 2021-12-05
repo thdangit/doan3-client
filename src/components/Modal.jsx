@@ -50,6 +50,9 @@ const Modal = ({ TotalPrice, totalQty, hideModal }) => {
 
     const uid = auth.currentUser.uid;
     const userData = await fs.collection("users").doc(uid).get();
+
+ 
+
     await fs.collection("Info bill of " + username + " " + uid).add({
       Name: userData.data().FullName,
       Email: userData.data().Email,
@@ -57,6 +60,7 @@ const Modal = ({ TotalPrice, totalQty, hideModal }) => {
       ResidentialAddress: residentialAddress,
       CartPrice: cartPrice,
       CartQty: cartQty,
+   
     });
     const cartData = await fs
       .collection("Cart of " + username + " " + uid)

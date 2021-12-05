@@ -46,7 +46,7 @@ const Header = () => {
       }
     });
     return () => {
-      window.removeEventListener("scroll");
+      window.removeEventListener("scroll", null);
     };
   }, []);
 
@@ -64,7 +64,7 @@ const Header = () => {
             .doc(user.uid)
             .get()
             .then((snapshot) => {
-              setUser(snapshot.data().FullName);
+              setUser(snapshot.data().FullName, user);
             });
         } else {
           setUser(null);
@@ -122,6 +122,9 @@ const Header = () => {
     });
   }, [username]);
 
+  // const viewCarrt = () => {
+  //   console.log("viewcarrt");
+  // };
   return (
     <div className="header" ref={headerRef}>
       <div className="container">
@@ -199,7 +202,7 @@ const Header = () => {
                 </div>
 
                 <div className="header__menu__item header__menu__right__item">
-                  <Link className="navLink" to="/">
+                  <Link className="navLink" to="/ViewBill">
                     <i className="bx bx-user"></i>
                     <p className="username">{user}</p>
                   </Link>
