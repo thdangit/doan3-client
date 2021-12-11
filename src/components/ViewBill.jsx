@@ -7,7 +7,7 @@ import Helmet from "../components/Helmet";
 import { auth, fs } from "../firebaseConfig";
 // import { ProductsData } from "../pages/ProductsData";
 // import ProductBillData from "./ProductBillData"
-import CartProductsInBill from "./CartProductsInBill"
+// import CartProductsInBill from "./CartProductsInBill";
 
 function ViewBill() {
   // gettin current user uid
@@ -48,15 +48,24 @@ function ViewBill() {
   const username = GetCurrentUser();
   console.log(username);
 
+  // get phone in colection info bill
 
-    // get phone in colection info bill
-
-    var currentdate = new Date();
-    var datetime = "" + currentdate.getDay() + "/" + currentdate.getMonth() 
-    + "/" + currentdate.getFullYear() + " - " 
-    + currentdate.getHours() + ":" 
-    + currentdate.getMinutes() + ":" + currentdate.getSeconds();
-    // console.log(datetime)
+  var currentdate = new Date();
+  var datetime =
+    "" +
+    currentdate.getDay() +
+    "/" +
+    currentdate.getMonth() +
+    "/" +
+    currentdate.getFullYear();
+  //  +
+  // " - " +
+  // currentdate.getHours() +
+  // ":" +
+  // currentdate.getMinutes() +
+  // ":" +
+  // currentdate.getSeconds();
+  // console.log(datetime)
   function GetCurrentData() {
     const [name, setName] = useState(null);
     const [email, setEmail] = useState(null);
@@ -72,44 +81,42 @@ function ViewBill() {
           collection.get().then((snapshot) => {
             snapshot.forEach((doc) => {
               const data = doc.data();
-                setName(data.Name);
-                setEmail(data.Email)
-                setPhone(data.Phone)
-                setDC(data.ResidentialAddress)
+              setName(data.Name);
+              setEmail(data.Email);
+              setPhone(data.Phone);
+              setDC(data.ResidentialAddress);
             });
           });
         } else {
           console.log("user is not");
         }
       });
-    }, );
+    });
     return [name, email, phone, dc];
   }
   const data = GetCurrentData();
   // console.log(data);
 
+  // const [cartProducts, setCartProducts] = useState([]);
 
-
-const [cartProducts, setCartProducts] = useState([]);
-
-  useEffect(() => {
-    auth.onAuthStateChanged((user) => {
-      if (user) {
-        fs.collection("Detail bill of " + username + " " + uid).onSnapshot(
-          (snapshot) => {
-            const newCartProduct = snapshot.docs.map((doc) => ({
-              ID: doc.id,
-              ...doc.data(),
-            }));
-            setCartProducts(newCartProduct);
-          }
-        );
-        // console.log(cartProducts);
-      } else {
-        console.log("user is not signed in to retrieve cart");
-      }
-    });
-  }, [username]);
+  // useEffect(() => {
+  //   auth.onAuthStateChanged((user) => {
+  //     if (user) {
+  //       fs.collection("Detail bill of " + username + " " + uid).onSnapshot(
+  //         (snapshot) => {
+  //           const newCartProduct = snapshot.docs.map((doc) => ({
+  //             ID: doc.id,
+  //             ...doc.data(),
+  //           }));
+  //           setCartProducts(newCartProduct);
+  //         }
+  //       );
+  //       // console.log(cartProducts);
+  //     } else {
+  //       console.log("user is not signed in to retrieve cart");
+  //     }
+  //   });
+  // }, [username]);
 
   // console.log(cartProducts);
 
@@ -117,8 +124,6 @@ const [cartProducts, setCartProducts] = useState([]);
   // const qty = cartProducts.map((cartProduct) => {
   //   return cartProduct.qty;
   // });
-
-
 
   return (
     <Helmet title="Hóa đơn">
@@ -180,30 +185,13 @@ const [cartProducts, setCartProducts] = useState([]);
             <div className="info__bill">
               <div className="info__customer">
                 <h1>Thông tin khách hàng</h1>
-                <div className="item">
-                  Tên: {data[0]}
-                </div>
+                <div className="item">Tên: {data[0]}</div>
                 <div className="item">Email : {data[1]}</div>
                 <div className="item">SĐT: {data[2]}</div>
                 <div className="item">Địa chỉ : {data[3]}</div>
               </div>
               <div className="info__detailBill">
                 <h1>Thông tin sản phẩm</h1>
-              {
-                cartProducts.length > 0 && (
-                <CartProductsInBill
-                  cartProducts={cartProducts}
-                  
-                />
-                  // console.log("sản phẩm")
-                )
-              }
-              {
-                cartProducts.length <1 && (
-                  
-                  <span>Chưa có sản phẩm</span>
-                )
-              }
               </div>
               <div className="total__price">
                 <h1>Thanh toán</h1>

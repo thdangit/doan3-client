@@ -75,7 +75,7 @@ const Header = () => {
   }
 
   const user = GetCurrentUser();
-  console.log(user);
+  // console.log(user);
 
   const history = useHistory();
 

@@ -12,6 +12,7 @@ import AdminHome from "../Admin/Pages/AdminHome";
 import LoginData from "../pages/LoginData";
 import SignUpData from "../pages/SignUpData";
 import ViewBill from "../components/ViewBill";
+import Test from "../components/test";
 
 const Routes = () => {
   return (
@@ -26,6 +27,7 @@ const Routes = () => {
       <Route path="/LoginData" component={LoginData} />
       <Route path="/SignUpData" component={SignUpData} />
       <Route path="/ViewBill" component={ViewBill} />
+      <Route path="/Test" component={Test} />
     </Switch>
   );
 };

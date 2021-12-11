@@ -1,22 +1,18 @@
 import React, { useEffect, useState } from "react";
 
-// import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
 import Helmet from "../components/Helmet";
-// import CartItem from "../components/CartItem";
+
 import Button from "../components/Button";
 
-// import productData from "../assets/fake-data/products";
-// import numberWithCommas from "../utils/numberWithCommas";
 import { auth, fs } from "../firebaseConfig";
-// import Grid from './Grid'
-// import ProductCard from './ProductCard'
-// import { useHistory } from "react-router-dom";
+
 import CartProducts from "./CartProducts";
 
 import Modal from "../components/Modal";
-// import { toast } from "react-toastify";
+import Test from "../components/test";
+
 import "react-toastify/dist/ReactToastify.css";
 
 import "../pages/custom.css";
