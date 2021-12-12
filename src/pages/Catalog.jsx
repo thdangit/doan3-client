@@ -17,7 +17,7 @@ const Catalog = () => {
     size: [],
   };
 
-  const productList = productData.getAllProducts();
+  const productList = [];
 
   const [products, setProducts] = useState(productList);
 
@@ -141,7 +141,7 @@ const Catalog = () => {
           </Button>
         </div>
         <div className="catalog__content">
-          <InfinityList data={products} />
+          <InfinityList data={[]} />
         </div>
       </div>
     </Helmet>
