@@ -67,11 +67,11 @@ function ViewBill({ TotalPrice, totalQty, props }) {
     for (var snap of item.docs) {
       var data = snap.data();
       // const trangthai = data.find((item) => data.id === uid);
-      // if ((data.id = uid)) {
-      //   const trangthai = data.trangthai;
-      //   setTT(trangthai);
-      //   console.log(data.trangthai);
-      // }
+      if ((data.id = uid)) {
+        const trangthai = data.trangthai;
+        setTT(trangthai);
+        console.log(data.trangthai);
+      }
       // console.log(trangthai);
       console.log(uid);
       console.log(data.id);
