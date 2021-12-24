@@ -4,6 +4,7 @@ import { auth } from "../firebaseConfig";
 import { useHistory } from "react-router-dom";
 import Button from "../components/Button";
 import "../pages/custom.css";
+import { toast } from "react-toastify";
 
 const LoginData = () => {
   const history = useHistory();
@@ -20,12 +21,15 @@ const LoginData = () => {
     auth
       .signInWithEmailAndPassword(email, password)
       .then(() => {
-        setSuccessMsg(
-          "Login Successfull. You will now automatically get redirected to Home page"
-        );
-        setEmail("");
-        setPassword("");
-        setErrorMsg("");
+        toast.success("Đăng nhập thành công!!!", {
+          position: "top-right",
+          autoClose: 1200,
+          hideProgressBar: false,
+          closeOnClick: true,
+          pauseOnHover: false,
+          draggable: false,
+          progress: undefined,
+        });
         setTimeout(() => {
           setSuccessMsg("");
           history.push("/catalog");

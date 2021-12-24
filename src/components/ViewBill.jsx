@@ -2,14 +2,14 @@ import React, { useState, useEffect } from "react";
 import Avt from "../assets/images/products/product-01 (1).jpg";
 
 import "../pages/custom.css";
+import { Link } from "react-router-dom";
 
 import Helmet from "../components/Helmet";
 import { auth, fs } from "../firebaseConfig";
-// import { ProductsData } from "../pages/ProductsData";
-// import ProductBillData from "./ProductBillData"
-// import CartProductsInBill from "./CartProductsInBill";
+import BillProducts from "./viewBill/BillProduct";
 
-function ViewBill() {
+function ViewBill({ TotalPrice, totalQty, props }) {
+  // const [cartQty] = useState(totalQty);
   // gettin current user uid
   function GetUserUid() {
     const [uid, setUid] = useState(null);
@@ -24,11 +24,13 @@ function ViewBill() {
   }
 
   const uid = GetUserUid();
-  console.log(uid);
 
-  // get username
+  // getting current user function
   function GetCurrentUser() {
     const [user, setUser] = useState(null);
+    const [email, setEmail] = useState(null);
+    const [sdt, setSDT] = useState(null);
+    const [dc, setDC] = useState(null);
     useEffect(() => {
       auth.onAuthStateChanged((user) => {
         if (user) {
@@ -36,17 +38,97 @@ function ViewBill() {
             .doc(user.uid)
             .get()
             .then((snapshot) => {
-              setUser(snapshot.data().FullName);
+              setUser(snapshot.data().FullName, user);
+              setEmail(snapshot.data().Email);
+              setSDT(snapshot.data().sdt);
+              setDC(snapshot.data().diachi);
             });
         } else {
           setUser(null);
+          setEmail(null);
+          setSDT(null);
+          setDC(null);
         }
       });
     }, []);
-    return user;
+    return [user, email, sdt, dc];
   }
-  const username = GetCurrentUser();
-  console.log(username);
+
+  const infor = GetCurrentUser();
+  // console.log(infor);
+
+  const [item, setItem] = useState([]);
+  const [tt, setTT] = useState("");
+
+  // getting products function
+  const getTT = async () => {
+    const item = await fs.collection("Bill").get();
+    // const itemArray = [];
+    for (var snap of item.docs) {
+      var data = snap.data();
+      // const trangthai = data.find((item) => data.id === uid);
+      // if ((data.id = uid)) {
+      //   const trangthai = data.trangthai;
+      //   setTT(trangthai);
+      //   console.log(data.trangthai);
+      // }
+      // console.log(trangthai);
+      console.log(uid);
+      console.log(data.id);
+      // itemArray.push({
+      //   ...data,
+      // });
+      // if (itemArray.length === item.docs.length) {
+      //   setItem(itemArray);
+      // }
+
+      // setTT(trangthai);
+    }
+    // const trangthai = data.trangthai;
+  };
+
+  useEffect(() => {
+    getTT();
+  }, [uid]);
+  // get username
+  // function GetData(id) {
+  //   const [user, setUser] = useState(null);
+  //   useEffect(() => {
+  //     auth.onAuthStateChanged((user) => {
+  //       if (user) {
+  //         fs.collection("Bill").doc(id).get().then(console.log(id));
+  //       } else {
+  //         setUser(null);
+  //       }
+  //     });
+  //   }, []);
+  //   return user;
+  // }
+
+  // const username = GetData();
+  // console.log(username);
+
+  // var docRef = fs.collection("Bill");
+
+  // docRef
+  //   .get()
+  //   .then((doc) => {
+  //     if (doc.exists) {
+  //       console.log("Document data:", doc.data());
+  //     } else {
+  //       // doc.data() will be undefined in this case
+  //       console.log("No such document!");
+  //     }
+  //   })
+  // .catch((error) => {
+  //   console.log("Error getting document:", error);
+  // });
+  // const GetID = async (id) => {
+  //   const doc = await fs.collection("Bill").doc(uid).get();
+  //   console.log(doc);
+  // };
+  // const test = GetID();
+  // console.log(test);
 
   // get phone in colection info bill
 
@@ -58,72 +140,39 @@ function ViewBill() {
     currentdate.getMonth() +
     "/" +
     currentdate.getFullYear();
-  //  +
-  // " - " +
-  // currentdate.getHours() +
-  // ":" +
-  // currentdate.getMinutes() +
-  // ":" +
-  // currentdate.getSeconds();
-  // console.log(datetime)
-  function GetCurrentData() {
-    const [name, setName] = useState(null);
-    const [email, setEmail] = useState(null);
-    const [phone, setPhone] = useState(null);
-    const [dc, setDC] = useState(null);
-    useEffect(() => {
-      auth.onAuthStateChanged((user) => {
-        if (user) {
-          const collection = fs.collection(
-            "Info bill of " + username + " " + uid
-          );
-          // console.log(collection);
-          collection.get().then((snapshot) => {
-            snapshot.forEach((doc) => {
-              const data = doc.data();
-              setName(data.Name);
-              setEmail(data.Email);
-              setPhone(data.Phone);
-              setDC(data.ResidentialAddress);
-            });
+
+  const [cartProducts, setCartProducts] = useState([]);
+
+  useEffect(() => {
+    auth.onAuthStateChanged((user) => {
+      if (user) {
+        fs.collection("Cart")
+          .doc(user.uid)
+          .get()
+          .then((snapshot) => {
+            const newCartProduct = snapshot.data().cart;
+            setCartProducts(newCartProduct);
           });
-        } else {
-          console.log("user is not");
-        }
-      });
+        console.log(cartProducts.id);
+      } else {
+        console.log("user is not signed in to retrieve cart");
+      }
     });
-    return [name, email, phone, dc];
-  }
-  const data = GetCurrentData();
-  // console.log(data);
+  }, []);
 
-  // const [cartProducts, setCartProducts] = useState([]);
+  const price = cartProducts.map((cartProduct) => {
+    return Number(cartProduct.gia);
+  }, []);
 
-  // useEffect(() => {
-  //   auth.onAuthStateChanged((user) => {
-  //     if (user) {
-  //       fs.collection("Detail bill of " + username + " " + uid).onSnapshot(
-  //         (snapshot) => {
-  //           const newCartProduct = snapshot.docs.map((doc) => ({
-  //             ID: doc.id,
-  //             ...doc.data(),
-  //           }));
-  //           setCartProducts(newCartProduct);
-  //         }
-  //       );
-  //       // console.log(cartProducts);
-  //     } else {
-  //       console.log("user is not signed in to retrieve cart");
-  //     }
-  //   });
-  // }, [username]);
+  // reducing the price in a single value
+  const reducerOfPrice = (accumulator, currentValue) =>
+    accumulator + currentValue;
 
-  // console.log(cartProducts);
+  const totalPrice = price.reduce(reducerOfPrice, 0);
+  console.log(totalPrice);
 
-  // getting the qty from cartProducts in a seperate array
-  // const qty = cartProducts.map((cartProduct) => {
-  //   return cartProduct.qty;
-  // });
+  // const [cartPrice] = useState(TotalPrice);
+  // console.log(cartPrice);
 
   return (
     <Helmet title="Hóa đơn">
@@ -134,7 +183,7 @@ function ViewBill() {
               <img src={Avt} alt="" />
             </div>
             <div className="view__info__title">
-              {username} <i class="bx bx-edit-alt"></i>
+              {infor[0]} <i class="bx bx-edit-alt"></i>
             </div>
           </div>
           <div className="view__info__catalog">
@@ -162,9 +211,9 @@ function ViewBill() {
           <div className="view__status__top">
             <ul>
               <li className="active">
-                <span>Chờ duyệt</span>
+                <span>{tt}</span>
               </li>
-              <li>
+              {/* <li>
                 <span>Đang giao</span>
               </li>
               <li>
@@ -172,7 +221,7 @@ function ViewBill() {
               </li>
               <li>
                 <span>Đã hủy</span>
-              </li>
+              </li> */}
             </ul>
           </div>
           <div className="view__status__list">
@@ -185,28 +234,31 @@ function ViewBill() {
             <div className="info__bill">
               <div className="info__customer">
                 <h1>Thông tin khách hàng</h1>
-                <div className="item">Tên: {data[0]}</div>
-                <div className="item">Email : {data[1]}</div>
-                <div className="item">SĐT: {data[2]}</div>
-                <div className="item">Địa chỉ : {data[3]}</div>
+                <div className="item">Tên: {infor[0]}</div>
+                <div className="item">Email: {infor[1]}: </div>
+                <div className="item">SĐT: {infor[2]} </div>
+                <div className="item">Địa chỉ : {infor[3]}</div>
               </div>
               <div className="info__detailBill">
                 <h1>Thông tin sản phẩm</h1>
+                <BillProducts cartProducts={cartProducts} />
               </div>
               <div className="total__price">
                 <h1>Thanh toán</h1>
-                <div className="price_bill">Tổng giá trị đơn: {}</div>
-                <div className="price_bill">Giảm giá</div>
+                <div className="price_bill">Tổng giá trị đơn: {totalPrice}</div>
+                <div className="price_bill">Giảm giá: {0}</div>
 
-                <div className="price_bill">Phí giao hàng</div>
-                <div className="price_bill">Thanh toán</div>
+                <div className="price_bill">Phí giao hàng: Free</div>
+                <div className="price_bill">Thanh toán: {totalPrice}</div>
                 <br />
-                <div className="price_bill">Tổng thanh toán</div>
+                <div className="price_bill">Tổng thanh toán: {totalPrice}</div>
               </div>
             </div>
             <div className="btn-end">
               <button>Hủy đơn hàng</button>
-              <button>Quay lại trang chủ</button>
+              <Link to="/">
+                <button>Quay lại trang chủ</button>
+              </Link>
             </div>
           </div>
         </div>

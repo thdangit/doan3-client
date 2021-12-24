@@ -13,10 +13,9 @@ const SignUpData = () => {
   const [email, setEmail] = useState("");
   const [sdt, setSdt] = useState("");
   const [gioitinh, setGioitinh] = useState("");
-  const [yearOfBirth, setYearOfBirth] = useState("");
   const [diachi, setDiaChi] = useState("");
   const [password, setPassword] = useState("");
-  const [chucvu] = useState("Khách hàng");
+  const [chucvu] = useState("Customer");
 
   const [errorMsg, setErrorMsg] = useState("");
   const [successMsg, setSuccessMsg] = useState("");
@@ -36,7 +35,6 @@ const SignUpData = () => {
             gioitinh: gioitinh,
             diachi: diachi,
             Email: email,
-            yearOfBirth: yearOfBirth,
             Password: password,
             chucvu: chucvu,
           })
@@ -132,7 +130,7 @@ const SignUpData = () => {
           onChange={(e) => setEmail(e.target.value)}
           value={email}
         ></input>
-        <br></br>
+        {/* <br></br>
 
         <label>Năm sinh</label>
         <input
@@ -143,9 +141,7 @@ const SignUpData = () => {
           min="1920"
           max="2022"
           value={yearOfBirth}
-        ></input>
-        <br></br>
-        <label>Chức vụ</label>
+        ></input> */}
         <input
           type="text"
           className="form-control chucvu"

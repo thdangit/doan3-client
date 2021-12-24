@@ -2,17 +2,8 @@ import React from "react";
 
 import "../pages/custom.css";
 
-
-
-
-export const IndividualCartProductInBill = ({
-  cartProduct,
-
-}) => {
+export const IndividualCartProductInBill = ({ cartProduct }) => {
   // get username
-
-
-
 
   return (
     <div className="product">
@@ -28,9 +19,7 @@ export const IndividualCartProductInBill = ({
         <span>Số lượng</span>
 
         <div className="product-text quantity-box">
-         
           <div>{cartProduct.qty}</div>
-         
         </div>
       </div>
 
@@ -38,9 +27,7 @@ export const IndividualCartProductInBill = ({
         <div className="product-text cart-price">
           {cartProduct.TotalProductPrice} VNĐ
         </div>
-       
       </div>
-    
     </div>
   );
 };

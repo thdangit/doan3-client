@@ -211,6 +211,9 @@ i {
   width: 100%;
 }
 
+.container-signup form.form-group .form-control.chucvu {
+  display: none;
+}
 /* success-msg */
 
 /* .success-msg {
@@ -447,7 +450,7 @@ input[type="number"]::-webkit-outer-spin-button {
 
 .modal-container {
   width: 300px;
-  height: 480px;
+  height: 610px;
   padding: 20px;
   background-color: #fff;
   position: relative;
@@ -484,6 +487,9 @@ input[type="number"]::-webkit-outer-spin-button {
   width: 100%;
 }
 
+.shade-area .modal-container .form-group-cart .form-control-cart.hidden {
+  display: none;
+}
 .btn-success {
   display: block;
   background-color: #b65f17d2;
@@ -604,6 +610,7 @@ input[type="number"]::-webkit-outer-spin-button {
 }
 .ViewBill .view__status .view__status__top ul li span {
   font-size: 16px;
+  font-weight: bold;
 }
 .ViewBill .view__status .view__status__top ul li.active {
   background-color: #b65f17d2;

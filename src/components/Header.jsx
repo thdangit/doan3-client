@@ -75,7 +75,7 @@ const Header = () => {
   }
 
   const user = GetCurrentUser();
-  // console.log(user);
+  console.log(user);
 
   const history = useHistory();
 
@@ -84,47 +84,50 @@ const Header = () => {
       history.push("/LoginData");
     });
   };
-  // get username
-  // function GetCurrentUser() {
-  //   const [user, setUser] = useState(null);
-  //   useEffect(() => {
-  //     auth.onAuthStateChanged((user) => {
-  //       if (user) {
-  //         fs.collection("users")
-  //           .doc(user.uid)
-  //           .get()
-  //           .then((snapshot) => {
-  //             setUser(snapshot.data().FullName);
-  //           });
-  //       } else {
-  //         setUser(null);
-  //       }
-  //     });
-  //   }, []);
-  //   return user;
-  // }
 
   const username = GetCurrentUser();
 
-  // state of totalProducts
-  const [totalProducts, setTotalProducts] = useState(0);
-  // getting cart products
+  const [cartProducts, setCartProducts] = useState([]);
+
+  // getting the qty from cartProducts in a seperate array
+  const qty = cartProducts.map((cartProduct) => {
+    return cartProduct.qty;
+  });
+
+  // console.log(qty.length);
+
+  // reducing the qty in a single value
+  const reducerOfQty = (accumulator, currentValue) =>
+    accumulator + currentValue;
+
+  const totalQty = qty.reduce(reducerOfQty, 0);
+
+  // console.log(totalQty);
+  var today = new Date();
+  var time = today.getSeconds();
+
   useEffect(() => {
     auth.onAuthStateChanged((user) => {
       if (user) {
-        fs.collection("Cart of " + username + " " + user.uid).onSnapshot(
-          (snapshot) => {
-            const qty = snapshot.docs.length;
-            setTotalProducts(qty);
-          }
-        );
+        fs.collection("Cart")
+          .doc(user.uid)
+          .get()
+          .then((snapshot) => {
+            const newCartProduct = snapshot.data().cart;
+            setCartProducts(newCartProduct);
+          })
+          .catch((error) => {
+            console.log("Error getting document:", error);
+          });
+      } else {
+        console.log("user is not signed in to retrieve cart");
       }
     });
-  }, [username]);
+  }, [time]);
+  console.log(time);
 
-  // const viewCarrt = () => {
-  //   console.log("viewcarrt");
-  // };
+  // console.log(cartProducts.length);
+
   return (
     <div className="header" ref={headerRef}>
       <div className="container">
@@ -168,11 +171,7 @@ const Header = () => {
                   LOGIN
                 </Link>
               </div> */}
-                <div
-                  className="header__menu__right"
-                  user={user}
-                  totalProducts={totalProducts}
-                >
+                <div className="header__menu__right" user="" totalProducts="">
                   <div className="header__menu__item header__menu__right__item">
                     <i className="bx bx-search"></i>
                   </div>
@@ -198,7 +197,7 @@ const Header = () => {
                   <Link to="/cart">
                     <i className="bx bx-cart-alt"></i>
                   </Link>
-                  <span className="cart-indicator">{totalProducts}</span>
+                  <span className="cart-indicator">{totalQty}</span>
                 </div>
 
                 <div className="header__menu__item header__menu__right__item">

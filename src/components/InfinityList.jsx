@@ -111,26 +111,43 @@ const InfinityList = (props) => {
     return user;
   }
 
-  const username = GetCurrentUser();
-  // console.log(username);
-
   useEffect(() => {
     getProducts();
   }, []);
 
-  let Product;
-
-  const addToCart = (products) => {
+  const addToCart = async (product) => {
     if (uid !== null) {
-      // console.log(product);
-      Product = products;
-      Product["qty"] = 1;
-      Product["TotalProductPrice"] = Product.qty * Product.gia;
-      fs.collection("Cart of " + username + " " + uid)
-        .doc(products.ID)
-        .set(Product)
+      const snapshot = await fs.collection("Cart").doc(uid).get();
+      // .then((snapshot) => {
+      //   const newCartProduct = snapshot.data().cart;
+      //   setCartProducts(newCartProduct);
+      // });
+
+      const cartProduct = snapshot.exists ? snapshot.data().cart : [];
+
+      const index = cartProduct.findIndex((item) => item.ID === product.ID);
+
+      if (index === -1) {
+        product.qty = 1;
+        cartProduct.push(product);
+      } else {
+        cartProduct[index].qty += 1;
+      }
+      // console.log({
+      //   index,
+      //   cartProduct,
+      //   product,
+      // });
+
+      // Product["TotalProductPrice"] = Product.qty * Product.gia;
+      console.log(cartProduct);
+
+      fs.collection("Cart")
+        .doc(uid)
+        .set({
+          cart: cartProduct,
+        })
         .then(() => {
-          // console.log("Lỗi");
           toast.success("Thêm thành công!!!", {
             position: "top-right",
             autoClose: 1200,
